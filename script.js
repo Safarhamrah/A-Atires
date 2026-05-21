@@ -95,10 +95,26 @@ function injectInventoryStyles() {
     .inventory-frame-load{width:fit-content}
     .inventory-live-view iframe{width:100%;min-height:540px;border:1px solid #dce3eb;border-radius:8px;background:#fff}
     .inventory-live-view iframe[hidden]{display:none}
+    .footer-grid{grid-template-columns:1fr auto auto auto}
+    .footer-credit{text-align:right}
+    .site-footer .footer-credit a{display:inline;color:#f7c600}
     @media (max-width:980px){.has-inventory-search .trust-panel{max-width:760px}.inventory-head{grid-template-columns:1fr}.inventory-results{grid-template-columns:repeat(2,minmax(0,1fr))}.inventory-results-top{align-items:flex-start;flex-direction:column}.inventory-actions{justify-content:flex-start}}
-    @media (max-width:680px){.has-inventory-search .hero-grid{padding-block:36px 24px;gap:18px}.has-inventory-search .hero-copy h1{font-size:clamp(1.95rem,9vw,2.55rem)}.has-inventory-search .hero-copy p{margin-top:18px;font-size:1rem}.hero-search{margin-top:22px}.search-shell{grid-template-columns:auto minmax(0,1fr);gap:10px;min-height:auto;padding:10px;border-radius:18px}.search-shell svg{width:21px;height:21px;margin-left:8px}.search-shell input{min-height:46px;font-size:1rem}.search-shell button{grid-column:1/-1;width:100%;min-height:48px}.search-examples{display:none}.has-inventory-search .hero-actions{display:grid;grid-template-columns:1fr 1fr;margin-top:22px}.has-inventory-search .hero-actions .btn:nth-child(3){grid-column:1/-1}.has-inventory-search .trust-panel{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:6px}.has-inventory-search .trust-badge{padding:10px 8px;border-left-width:3px}.has-inventory-search .trust-badge span{font-size:.62rem;line-height:1.15}.has-inventory-search .trust-badge strong{font-size:.82rem}.inventory-section{padding:64px 0}.inventory-results{grid-template-columns:1fr}.inventory-head{align-items:stretch}.inventory-head .btn,.inventory-frame-load,.inventory-actions,.inventory-card-actions{width:100%}.inventory-actions,.inventory-card-actions{flex-direction:column}.inventory-live-view{padding:16px}.inventory-live-view iframe{min-height:420px}}
+    @media (max-width:680px){.has-inventory-search .hero-grid{padding-block:36px 24px;gap:18px}.has-inventory-search .hero-copy h1{font-size:clamp(1.95rem,9vw,2.55rem)}.has-inventory-search .hero-copy p{margin-top:18px;font-size:1rem}.hero-search{margin-top:22px}.search-shell{grid-template-columns:auto minmax(0,1fr);gap:10px;min-height:auto;padding:10px;border-radius:18px}.search-shell svg{width:21px;height:21px;margin-left:8px}.search-shell input{min-height:46px;font-size:1rem}.search-shell button{grid-column:1/-1;width:100%;min-height:48px}.search-examples{display:none}.has-inventory-search .hero-actions{display:grid;grid-template-columns:1fr 1fr;margin-top:22px}.has-inventory-search .hero-actions .btn:nth-child(3){grid-column:1/-1}.has-inventory-search .trust-panel{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:6px}.has-inventory-search .trust-badge{padding:10px 8px;border-left-width:3px}.has-inventory-search .trust-badge span{font-size:.62rem;line-height:1.15}.has-inventory-search .trust-badge strong{font-size:.82rem}.inventory-section{padding:64px 0}.inventory-results{grid-template-columns:1fr}.inventory-head{align-items:stretch}.inventory-head .btn,.inventory-frame-load,.inventory-actions,.inventory-card-actions{width:100%}.inventory-actions,.inventory-card-actions{flex-direction:column}.inventory-live-view{padding:16px}.inventory-live-view iframe{min-height:420px}.footer-grid{grid-template-columns:1fr}.footer-credit{text-align:left}}
   `;
   document.head.appendChild(style);
+}
+
+function injectFooterCredit() {
+  const footerGrid = document.querySelector(".footer-grid");
+  if (!footerGrid || footerGrid.querySelector(".footer-credit")) {
+    return;
+  }
+
+  const credit = document.createElement("p");
+  credit.className = "footer-credit";
+  credit.innerHTML =
+    'Designed and created by <a href="https://noahtech.ca" target="_blank" rel="noopener noreferrer">Noah Tech</a>';
+  footerGrid.appendChild(credit);
 }
 
 function inventorySearchMarkup(formId, inputId, placeholder, buttonText, withChips = false) {
@@ -408,6 +424,7 @@ if (bookingForm && formMessage) {
 }
 
 injectInventoryUi();
+injectFooterCredit();
 refreshInventoryElements();
 bindInventoryEvents();
 loadInventory();
