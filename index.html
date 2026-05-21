@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A&A TIRES LTD provides new and used tire sales, installation, balancing, seasonal tire changes, and tire repairs in Red Deer County, Alberta."
+    />
+    <title>A&amp;A TIRES LTD | Tire Sales &amp; Repairs in Red Deer County</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header" data-header>
+      <a class="brand" href="#top" aria-label="A&A TIRES LTD home">
+        <span class="brand-mark">A&amp;A</span>
+        <span>
+          <strong>A&amp;A TIRES LTD</strong>
+          <small>Red Deer County</small>
+        </span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" data-nav-toggle>
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="main-nav" data-nav>
+        <a href="#services">Services</a>
+        <a href="#booking">Booking</a>
+        <a href="#about">About</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <a class="header-call" href="tel:+14035980258" aria-label="Call A&A TIRES LTD">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M22 16.9v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.35 1.9.66 2.8a2 2 0 0 1-.45 2.11L8.05 9.9a16 16 0 0 0 6.05 6.05l1.27-1.27a2 2 0 0 1 2.11-.45c.9.31 1.84.53 2.8.66A2 2 0 0 1 22 16.9Z" />
+        </svg>
+        (403) 598-0258
+      </a>
+    </header>
+
+    <main id="top">
+      <section class="hero section-dark" aria-labelledby="hero-title">
+        <div class="hero-bg" role="img" aria-label="Professional tire shop garage service bay"></div>
+        <div class="hero-overlay"></div>
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <h1 id="hero-title">Reliable Tire Sales, Installation &amp; Repairs in Red Deer County</h1>
+            <p>
+              New and used tires, fast service, affordable prices, and over 7 years of trusted
+              experience.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#booking">Book Appointment</a>
+              <a class="btn btn-secondary" href="tel:+14035980258">Call Now</a>
+            </div>
+            <div class="hero-phone">
+              <span>Call A&amp;A TIRES LTD</span>
+              <a href="tel:+14035980258">(403) 598-0258</a>
+            </div>
+          </div>
+
+          <aside class="trust-panel" aria-label="Service highlights">
+            <div class="trust-badge">
+              <span>Affordable Service</span>
+              <strong>$</strong>
+            </div>
+            <div class="trust-badge">
+              <span>Fast Repairs</span>
+              <strong>Same-shop help</strong>
+            </div>
+            <div class="trust-badge">
+              <span>Local Tire Experts</span>
+              <strong>7+ years</strong>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="quick-strip" aria-label="Business summary">
+        <div class="container quick-grid">
+          <div>
+            <span>Tire Dealer &amp; Repair Shop</span>
+            <strong>New and used tire options</strong>
+          </div>
+          <div>
+            <span>Red Deer County, Alberta</span>
+            <strong>105 Burnt Lake Trail</strong>
+          </div>
+          <div>
+            <span>In-store shopping</span>
+            <strong>Installation, balancing, repair</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="section booking-section" id="booking" aria-labelledby="booking-title">
+        <div class="container booking-layout">
+          <div class="section-intro">
+            <h2 id="booking-title">Book a Tire Service Appointment</h2>
+            <p>
+              Tell us what you need and A&amp;A TIRES LTD will contact you shortly to confirm your
+              appointment.
+            </p>
+            <div class="booking-note">
+              <strong>Need urgent help?</strong>
+              <a href="tel:+14035980258">Call (403) 598-0258</a>
+            </div>
+          </div>
+
+          <form class="booking-form" id="bookingForm">
+            <div class="form-row">
+              <label>
+                Full name
+                <input type="text" name="fullName" autocomplete="name" required />
+              </label>
+              <label>
+                Phone number
+                <input type="tel" name="phone" autocomplete="tel" required />
+              </label>
+            </div>
+            <div class="form-row">
+              <label>
+                Email
+                <input type="email" name="email" autocomplete="email" required />
+              </label>
+              <label>
+                Vehicle make/model/year
+                <input type="text" name="vehicle" placeholder="Ford F-150 2020" required />
+              </label>
+            </div>
+            <div class="form-row">
+              <label>
+                Tire size if known
+                <input type="text" name="tireSize" placeholder="225/65R17" />
+              </label>
+              <label>
+                Service needed
+                <select name="service" required>
+                  <option value="">Select a service</option>
+                  <option>New tires</option>
+                  <option>Used tires</option>
+                  <option>Tire installation</option>
+                  <option>Tire repair</option>
+                  <option>Tire balancing</option>
+                  <option>Seasonal tire change</option>
+                  <option>Other</option>
+                </select>
+              </label>
+            </div>
+            <div class="form-row">
+              <label>
+                Preferred date
+                <input type="date" name="preferredDate" required />
+              </label>
+              <label>
+                Preferred time
+                <input type="time" name="preferredTime" required />
+              </label>
+            </div>
+            <label>
+              Additional notes
+              <textarea name="notes" rows="5" placeholder="Tell us about the tire issue, vehicle type, or preferred tire options."></textarea>
+            </label>
+            <button class="btn btn-primary form-submit" type="submit">Request Booking</button>
+            <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+
+      <section class="section services-section" id="services" aria-labelledby="services-title">
+        <div class="container">
+          <div class="section-heading">
+            <h2 id="services-title">Tire Services Built Around Your Drive</h2>
+            <p>Sales, installation, balancing, seasonal changes, and repairs for many vehicle types.</p>
+          </div>
+
+          <div class="services-grid">
+            <article class="service-card">
+              <span class="service-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" /><circle cx="12" cy="12" r="3" /><path d="M12 4v5M12 15v5M4 12h5M15 12h5" /></svg>
+              </span>
+              <h3>New Tire Sales</h3>
+              <p>Quality new tire options to match your vehicle, driving needs, and budget.</p>
+            </article>
+            <article class="service-card">
+              <span class="service-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" /><path d="M7 8.5c3 2.4 7 2.4 10 0M7 15.5c3-2.4 7-2.4 10 0" /></svg>
+              </span>
+              <h3>Used Tire Sales</h3>
+              <p>Affordable used tires inspected for safety, tread condition, and everyday reliability.</p>
+            </article>
+            <article class="service-card">
+              <span class="service-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M4 17h3l8-8-3-3-8 8v3Z" /><path d="m12 6 3-3 3 3-3 3Z" /><path d="M5 21h14" /></svg>
+              </span>
+              <h3>Tire Installation</h3>
+              <p>Professional mounting and installation to help your vehicle leave ready for the road.</p>
+            </article>
+            <article class="service-card">
+              <span class="service-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17v3h3l5.3-5.3a4 4 0 0 0 5.4-5.4l-3 3-3-3 3-3Z" /></svg>
+              </span>
+              <h3>Tire Repairs</h3>
+              <p>Flat tire repair and tire service to get you moving again quickly and affordably.</p>
+            </article>
+            <article class="service-card">
+              <span class="service-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" /><circle cx="12" cy="12" r="3" /></svg>
+              </span>
+              <h3>Seasonal Tire Change</h3>
+              <p>Switch between winter and all-season tires with a reliable local team.</p>
+            </article>
+            <article class="service-card">
+              <span class="service-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3" /><circle cx="12" cy="12" r="6" /><path d="m15 9-6 6M9 9l6 6" /></svg>
+              </span>
+              <h3>Balancing &amp; Inspection</h3>
+              <p>Balancing, tire inspection, and condition checks for a smoother, safer ride.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section why-section" aria-labelledby="why-title">
+        <div class="container why-grid">
+          <div class="why-copy">
+            <h2 id="why-title">Why Choose A&amp;A TIRES LTD?</h2>
+            <p>
+              Local tire service should feel straightforward: clear options, fair pricing, and work
+              completed with care.
+            </p>
+            <a class="btn btn-dark" href="#contact">Contact the Shop</a>
+          </div>
+          <div class="why-list">
+            <div><strong>Over 7 years of experience</strong><span>Practical tire knowledge for everyday drivers.</span></div>
+            <div><strong>Fast and reliable service</strong><span>Built for customers who need to get back on the road.</span></div>
+            <div><strong>Affordable prices</strong><span>Budget-friendly tire options and repair support.</span></div>
+            <div><strong>New and used tire options</strong><span>More ways to find the right fit for your vehicle.</span></div>
+            <div><strong>Friendly local business</strong><span>Proudly serving Red Deer County and nearby areas.</span></div>
+            <div><strong>Service for many vehicle types</strong><span>Help for cars, trucks, SUVs, and more.</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section about-section" id="about" aria-labelledby="about-title">
+        <div class="container about-grid">
+          <div class="about-media">
+            <img src="assets/shop-sign.png" alt="A&A TIRES LTD business sign" />
+          </div>
+          <div class="about-copy">
+            <h2 id="about-title">Local Tire Experts in Red Deer County</h2>
+            <p>
+              A&amp;A TIRES LTD is a local tire dealer and repair shop proudly serving Red Deer County
+              and nearby areas. We help customers find safe, affordable, and reliable tire solutions,
+              whether they need new tires, used tires, installation, or repair services.
+            </p>
+            <div class="about-stats" aria-label="Shop highlights">
+              <div><strong>7+</strong><span>Years experience</span></div>
+              <div><strong>$</strong><span>Affordable range</span></div>
+              <div><strong>Local</strong><span>Red Deer County</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section gallery-section" id="gallery" aria-labelledby="gallery-title">
+        <div class="container">
+          <div class="section-heading">
+            <h2 id="gallery-title">Shop, Tire &amp; Service Gallery</h2>
+            <p>Clean service bays, organized inventory, and tire care focused on dependable results.</p>
+          </div>
+          <div class="gallery-grid">
+            <figure>
+              <img src="assets/hero-garage.png" alt="A clean tire shop garage with a vehicle service bay" />
+              <figcaption>Tire installation</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/tire-inventory.png" alt="Organized tire inventory on shop racks" />
+              <figcaption>New and used tires</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/service-bay.png" alt="Mechanic working on tire balancing and repair service" />
+              <figcaption>Balancing and repair</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/shop-sign.png" alt="A&A TIRES LTD sign style image" />
+              <figcaption>A&amp;A TIRES LTD</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="section contact-section" id="contact" aria-labelledby="contact-title">
+        <div class="container contact-grid">
+          <div class="contact-card">
+            <h2 id="contact-title">Contact A&amp;A TIRES LTD</h2>
+            <p>Fast tire sales, installation, balancing, seasonal tire changes, and repair service.</p>
+
+            <dl class="contact-list">
+              <div>
+                <dt>Phone</dt>
+                <dd><a href="tel:+14035980258">(403) 598-0258</a></dd>
+              </div>
+              <div>
+                <dt>Email</dt>
+                <dd><a href="mailto:aandatires18@gmail.com">aandatires18@gmail.com</a></dd>
+              </div>
+              <div>
+                <dt>Address</dt>
+                <dd>105 Burnt Lake Trail, Red Deer County, Red Deer, AB, Canada, Alberta</dd>
+              </div>
+            </dl>
+
+            <div class="contact-actions">
+              <a class="btn btn-primary" href="tel:+14035980258">Call Now</a>
+              <a class="btn btn-outline" href="mailto:aandatires18@gmail.com">Email Us</a>
+              <a
+                class="btn btn-outline"
+                href="https://www.google.com/maps/search/?api=1&query=105%20Burnt%20Lake%20Trail%2C%20Red%20Deer%20County%2C%20Red%20Deer%2C%20AB%2C%20Canada%2C%20Alberta"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Get Directions
+              </a>
+            </div>
+          </div>
+
+          <div class="map-panel" aria-label="Map location for A&A TIRES LTD">
+            <iframe
+              title="Map to A&A TIRES LTD"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps?q=105%20Burnt%20Lake%20Trail%2C%20Red%20Deer%20County%2C%20Red%20Deer%2C%20AB%2C%20Canada%2C%20Alberta&output=embed"
+            ></iframe>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <strong>A&amp;A TIRES LTD</strong>
+          <p>Tire Sales &bull; Installation &bull; Repairs</p>
+          <p>Red Deer County, Alberta</p>
+        </div>
+        <div>
+          <a href="tel:+14035980258">(403) 598-0258</a>
+          <a href="mailto:aandatires18@gmail.com">aandatires18@gmail.com</a>
+        </div>
+        <p>&copy; <span id="year"></span> A&amp;A TIRES LTD. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <a class="floating-call" href="tel:+14035980258" aria-label="Call A&A TIRES LTD">
+      <svg aria-hidden="true" viewBox="0 0 24 24">
+        <path d="M22 16.9v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.35 1.9.66 2.8a2 2 0 0 1-.45 2.11L8.05 9.9a16 16 0 0 0 6.05 6.05l1.27-1.27a2 2 0 0 1 2.11-.45c.9.31 1.84.53 2.8.66A2 2 0 0 1 22 16.9Z" />
+      </svg>
+      Call
+    </a>
+
+    <script src="script.js"></script>
+  </body>
+</html>
