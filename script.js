@@ -12,26 +12,11 @@ let inventoryStatus;
 let inventoryResults;
 let inventorySection;
 let bookInventoryMatch;
-let inventoryFrame;
-let loadInventoryFrame;
 
-const fallbackInventory = [
-  { sku: "SKU-1001", brand: "Michelin", tireSize: "205/55R16", quantity: 24, location: "Downtown Office", alert: "OK" },
-  { sku: "SKU-1002", brand: "Bridgestone", tireSize: "225/45R17", quantity: 8, location: "Warehouse North", alert: "Low Stock" },
-  { sku: "SKU-1003", brand: "Goodyear", tireSize: "195/65R15", quantity: 15, location: "Westside Branch", alert: "OK" },
-  { sku: "SKU-1004", brand: "Pirelli", tireSize: "215/60R16", quantity: 5, location: "Eastside Hub", alert: "Low Stock" },
-  { sku: "SKU-1005", brand: "Continental", tireSize: "235/40R18", quantity: 30, location: "South Distribution Center", alert: "OK" },
-  { sku: "SKU-1006", brand: "Hankook", tireSize: "185/60R15", quantity: 12, location: "Tech Campus", alert: "OK" },
-  { sku: "SKU-1007", brand: "Yokohama", tireSize: "225/50R17", quantity: 6, location: "Retail Store - Midtown", alert: "Low Stock" },
-  { sku: "SKU-1008", brand: "Dunlop", tireSize: "245/45R18", quantity: 18, location: "Customer Service Center", alert: "OK" },
-  { sku: "SKU-1009", brand: "Falken", tireSize: "215/55R17", quantity: 9, location: "Logistics HQ", alert: "Low Stock" },
-  { sku: "SKU-1010", brand: "Kumho", tireSize: "205/60R16", quantity: 20, location: "Training Facility", alert: "OK" },
-  { sku: "SKU-1011", brand: "Firestone", tireSize: "195/60R15", quantity: 7, location: "Regional Office - Atlanta", alert: "Low Stock" },
-  { sku: "SKU-1012", brand: "Nexen", tireSize: "225/65R17", quantity: 14, location: "Production Plant", alert: "OK" },
-  { sku: "SKU-1013", brand: "Toyo", tireSize: "215/50R17", quantity: 11, location: "R&D Center", alert: "OK" },
-  { sku: "SKU-1014", brand: "BFGoodrich", tireSize: "235/55R18", quantity: 4, location: "Satellite Office - Denver", alert: "Low Stock" },
-  { sku: "SKU-1015", brand: "General Tire", tireSize: "205/70R15", quantity: 16, location: "Call Center - Phoenix", alert: "OK" },
-];
+const JOTFORM_AGENT_SRC =
+  "https://cdn.jotfor.ms/agent/embedjs/019e48dc02a77f1aa743bcb5d570fd6ad746/embed.js?autoOpenChatIn=1";
+const APPOINTMENT_CHECKER_URL = "https://www.jotform.com/app/261404551332245";
+const MIN_SEARCH_LENGTH = 2;
 
 let inventoryRecords = [];
 let inventorySource = "preview";
@@ -89,17 +74,12 @@ function injectInventoryStyles() {
     .inventory-card-actions .btn{min-height:42px;flex:1;padding-inline:12px;font-size:.82rem}
     .inventory-empty{grid-column:1/-1;display:grid;gap:14px}
     .inventory-empty p{max-width:760px;margin:0;color:#5e6875;font-weight:700}
-    .inventory-live-view{display:grid;gap:18px;margin-top:28px;padding:24px;border:1px solid #dce3eb;border-radius:8px;background:#fff;box-shadow:0 22px 55px rgba(6,16,31,.16)}
-    .inventory-live-view h3{margin:0;color:#06101f;font-size:1.25rem}
-    .inventory-live-view p{margin:4px 0 0;color:#5e6875;font-weight:700}
-    .inventory-frame-load{width:fit-content}
-    .inventory-live-view iframe{width:100%;min-height:540px;border:1px solid #dce3eb;border-radius:8px;background:#fff}
-    .inventory-live-view iframe[hidden]{display:none}
     .footer-grid{grid-template-columns:1fr auto auto auto}
     .footer-credit{text-align:right}
     .site-footer .footer-credit a{display:inline;color:#f7c600}
+    .appointment-checker-link{white-space:nowrap}
     @media (max-width:980px){.has-inventory-search .trust-panel{max-width:760px}.inventory-head{grid-template-columns:1fr}.inventory-results{grid-template-columns:repeat(2,minmax(0,1fr))}.inventory-results-top{align-items:flex-start;flex-direction:column}.inventory-actions{justify-content:flex-start}}
-    @media (max-width:680px){.has-inventory-search .hero-grid{padding-block:36px 24px;gap:18px}.has-inventory-search .hero-copy h1{font-size:clamp(1.95rem,9vw,2.55rem)}.has-inventory-search .hero-copy p{margin-top:18px;font-size:1rem}.hero-search{margin-top:22px}.search-shell{grid-template-columns:auto minmax(0,1fr);gap:10px;min-height:auto;padding:10px;border-radius:18px}.search-shell svg{width:21px;height:21px;margin-left:8px}.search-shell input{min-height:46px;font-size:1rem}.search-shell button{grid-column:1/-1;width:100%;min-height:48px}.search-examples{display:none}.has-inventory-search .hero-actions{display:grid;grid-template-columns:1fr 1fr;margin-top:22px}.has-inventory-search .hero-actions .btn:nth-child(3){grid-column:1/-1}.has-inventory-search .trust-panel{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:6px}.has-inventory-search .trust-badge{padding:10px 8px;border-left-width:3px}.has-inventory-search .trust-badge span{font-size:.62rem;line-height:1.15}.has-inventory-search .trust-badge strong{font-size:.82rem}.inventory-section{padding:64px 0}.inventory-results{grid-template-columns:1fr}.inventory-head{align-items:stretch}.inventory-head .btn,.inventory-frame-load,.inventory-actions,.inventory-card-actions{width:100%}.inventory-actions,.inventory-card-actions{flex-direction:column}.inventory-live-view{padding:16px}.inventory-live-view iframe{min-height:420px}.footer-grid{grid-template-columns:1fr}.footer-credit{text-align:left}}
+    @media (max-width:680px){.has-inventory-search .hero-grid{padding-block:36px 24px;gap:18px}.has-inventory-search .hero-copy h1{font-size:clamp(1.95rem,9vw,2.55rem)}.has-inventory-search .hero-copy p{margin-top:18px;font-size:1rem}.hero-search{margin-top:22px}.search-shell{grid-template-columns:auto minmax(0,1fr);gap:10px;min-height:auto;padding:10px;border-radius:18px}.search-shell svg{width:21px;height:21px;margin-left:8px}.search-shell input{min-height:46px;font-size:1rem}.search-shell button{grid-column:1/-1;width:100%;min-height:48px}.search-examples{display:none}.has-inventory-search .hero-actions{display:grid;grid-template-columns:1fr 1fr;margin-top:22px}.has-inventory-search .hero-actions .btn:nth-child(3){grid-column:1/-1}.has-inventory-search .trust-panel{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:6px}.has-inventory-search .trust-badge{padding:10px 8px;border-left-width:3px}.has-inventory-search .trust-badge span{font-size:.62rem;line-height:1.15}.has-inventory-search .trust-badge strong{font-size:.82rem}.inventory-section{padding:64px 0}.inventory-results{grid-template-columns:1fr}.inventory-head{align-items:stretch}.inventory-head .btn,.inventory-actions,.inventory-card-actions{width:100%}.inventory-actions,.inventory-card-actions{flex-direction:column}.footer-grid{grid-template-columns:1fr}.footer-credit{text-align:left}}
   `;
   document.head.appendChild(style);
 }
@@ -115,6 +95,49 @@ function injectFooterCredit() {
   credit.innerHTML =
     'Designed and created by <a href="https://noahtech.ca" target="_blank" rel="noopener noreferrer">Noah Tech</a>';
   footerGrid.appendChild(credit);
+}
+
+function injectJotformAgent() {
+  if (document.querySelector(`script[src="${JOTFORM_AGENT_SRC}"]`)) {
+    return;
+  }
+
+  const script = document.createElement("script");
+  script.src = JOTFORM_AGENT_SRC;
+  script.async = true;
+  document.body.appendChild(script);
+}
+
+function removePublicInventoryAccess() {
+  document
+    .querySelectorAll('a[href*="airtable.com/appejU4ScV5Gi8rMt"], .inventory-live-view')
+    .forEach((element) => element.remove());
+}
+
+function injectAppointmentCheckerLinks() {
+  const bookingNote = document.querySelector(".booking-note");
+  if (bookingNote && !bookingNote.querySelector("[data-appointment-checker]")) {
+    const checkerLink = document.createElement("a");
+    checkerLink.className = "appointment-checker-link";
+    checkerLink.href = APPOINTMENT_CHECKER_URL;
+    checkerLink.target = "_blank";
+    checkerLink.rel = "noopener noreferrer";
+    checkerLink.dataset.appointmentChecker = "true";
+    checkerLink.textContent = "Check Appointment";
+    bookingNote.appendChild(checkerLink);
+  }
+
+  const inventoryActions = document.querySelector(".inventory-actions");
+  if (inventoryActions && !inventoryActions.querySelector("[data-appointment-checker]")) {
+    const checkerButton = document.createElement("a");
+    checkerButton.className = "btn btn-outline";
+    checkerButton.href = APPOINTMENT_CHECKER_URL;
+    checkerButton.target = "_blank";
+    checkerButton.rel = "noopener noreferrer";
+    checkerButton.dataset.appointmentChecker = "true";
+    checkerButton.textContent = "Check Appointment";
+    inventoryActions.appendChild(checkerButton);
+  }
 }
 
 function inventorySearchMarkup(formId, inputId, placeholder, buttonText, withChips = false) {
@@ -175,27 +198,19 @@ function injectInventoryUi() {
         <div class="inventory-head">
           <div class="section-heading">
             <h2 id="inventory-title">Search Tire Availability</h2>
-            <p>Find matching tire sizes, brands, SKUs, and current stock from the connected A&amp;A Tires inventory.</p>
+            <p>Search by tire size, brand, or SKU. Customers can check matches here without opening the full inventory table.</p>
           </div>
-          <a class="btn btn-dark" href="https://airtable.com/appejU4ScV5Gi8rMt/shrH4e4r8hqGDZc4D" target="_blank" rel="noopener noreferrer">Open Full Inventory</a>
         </div>
         ${inventorySearchMarkup("inventorySearchForm", "inventorySearchInput", "Try 225/65R17, Bridgestone, or SKU-1012", "Check Stock")}
         <div class="inventory-results-top">
-          <p class="inventory-status" id="inventoryStatus" role="status" aria-live="polite">Loading tire inventory...</p>
+          <p class="inventory-status" id="inventoryStatus" role="status" aria-live="polite">Enter a tire size, brand, or SKU to check availability.</p>
           <div class="inventory-actions">
             <a class="btn btn-primary" href="#booking" id="bookInventoryMatch">Book Matching Tire</a>
             <a class="btn btn-outline" href="tel:+14035980258">Call to Confirm</a>
+            <a class="btn btn-outline" href="${APPOINTMENT_CHECKER_URL}" target="_blank" rel="noopener noreferrer" data-appointment-checker>Check Appointment</a>
           </div>
         </div>
         <div class="inventory-results" id="inventoryResults" aria-live="polite"></div>
-        <div class="inventory-live-view">
-          <div>
-            <h3>Connected Airtable Inventory</h3>
-            <p>Live stock table for A&amp;A Tires inventory management.</p>
-          </div>
-          <button class="btn btn-outline inventory-frame-load" id="loadInventoryFrame" type="button">Load Airtable Table</button>
-          <iframe id="inventoryFrame" title="A&A Tires Airtable inventory" loading="lazy" data-src="https://airtable.com/embed/appejU4ScV5Gi8rMt/shrH4e4r8hqGDZc4D/tbl1Uo93RVAf8bNMt/viwAsp3nyG1Tfrv1U?viewControls=on" hidden></iframe>
-        </div>
       </div>
     `;
     const quickStrip = document.querySelector(".quick-strip");
@@ -216,8 +231,6 @@ function refreshInventoryElements() {
   inventoryResults = document.getElementById("inventoryResults");
   inventorySection = document.getElementById("inventory");
   bookInventoryMatch = document.getElementById("bookInventoryMatch");
-  inventoryFrame = document.getElementById("inventoryFrame");
-  loadInventoryFrame = document.getElementById("loadInventoryFrame");
 }
 
 function escapeHtml(value) {
@@ -248,7 +261,7 @@ function normalizeInventoryRecord(record) {
 
 function recordMatches(record, query) {
   const needle = compactSearch(query);
-  const haystack = compactSearch([record.sku, record.brand, record.tireSize, record.quantity, record.location, record.alert, record.supplier].join(" "));
+  const haystack = compactSearch([record.sku, record.brand, record.tireSize, record.quantity, record.alert].join(" "));
   return haystack.includes(needle);
 }
 
@@ -263,7 +276,7 @@ function syncInventoryInputs(query) {
 
 function getInventoryMatches(query) {
   const trimmedQuery = query.trim();
-  if (!trimmedQuery) return inventoryRecords.slice(0, 6);
+  if (!trimmedQuery) return [];
   return inventoryRecords.filter((record) => recordMatches(record, trimmedQuery));
 }
 
@@ -272,18 +285,16 @@ function renderInventory(query = "") {
 
   const trimmedQuery = query.trim();
   const matches = getInventoryMatches(trimmedQuery);
-  const sourceLabel = inventorySource === "airtable" ? "live Airtable inventory" : "inventory preview";
+  const sourceLabel = inventorySource === "airtable" ? "A&A Tires inventory" : "inventory search";
   activeInventoryQuery = trimmedQuery;
 
-  if (!inventoryRecords.length) {
-    inventoryStatus.textContent = "Inventory is loading. You can still call the shop to confirm stock.";
+  if (compactSearch(trimmedQuery).length < MIN_SEARCH_LENGTH) {
+    inventoryStatus.textContent = "Enter a tire size, brand, or SKU to check availability.";
     inventoryResults.innerHTML = "";
     return;
   }
 
-  inventoryStatus.textContent = trimmedQuery
-    ? `${pluralize(matches.length, "match")} for "${trimmedQuery}" from ${sourceLabel}.`
-    : `Showing ${pluralize(Math.min(matches.length, inventoryRecords.length), "featured tire")} from ${sourceLabel}.`;
+  inventoryStatus.textContent = `${pluralize(matches.length, "match")} for "${trimmedQuery}" from ${sourceLabel}.`;
 
   if (!matches.length) {
     inventoryResults.innerHTML = `
@@ -312,7 +323,7 @@ function renderInventory(query = "") {
             <span class="inventory-pill ${isLow ? "is-low" : "is-ok"}">${escapeHtml(record.alert || "Available")}</span>
           </div>
           <div class="inventory-stock"><span>Current stock</span><strong>${escapeHtml(record.quantity)}</strong></div>
-          <p class="inventory-detail">${escapeHtml(record.location || "A&A Tires inventory")}</p>
+          <p class="inventory-detail">Call A&amp;A TIRES LTD to confirm fitment and installation timing.</p>
           <div class="inventory-card-actions">
             <a class="btn btn-primary" href="#booking" data-inventory-book data-inventory-size="${escapeHtml(record.tireSize)}" data-inventory-summary="${escapeHtml(summary)}">Book</a>
             <a class="btn btn-outline" href="tel:+14035980258">Call</a>
@@ -323,27 +334,48 @@ function renderInventory(query = "") {
     .join("");
 }
 
-function runInventorySearch(query, shouldScroll = false) {
+async function runInventorySearch(query, shouldScroll = false) {
   const cleanQuery = query.trim();
   syncInventoryInputs(cleanQuery);
-  renderInventory(cleanQuery);
+
+  if (compactSearch(cleanQuery).length < MIN_SEARCH_LENGTH) {
+    inventoryRecords = [];
+    renderInventory(cleanQuery);
+  } else {
+    if (inventoryStatus) {
+      inventoryStatus.textContent = `Searching for "${cleanQuery}"...`;
+    }
+    if (inventoryResults) {
+      inventoryResults.innerHTML = "";
+    }
+    await loadInventory(cleanQuery);
+  }
+
   if (shouldScroll && inventorySection) {
     inventorySection.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 }
 
-async function loadInventory() {
+async function loadInventory(query = activeInventoryQuery) {
+  const cleanQuery = query.trim();
+
+  if (compactSearch(cleanQuery).length < MIN_SEARCH_LENGTH) {
+    inventoryRecords = [];
+    renderInventory(cleanQuery);
+    return;
+  }
+
   try {
-    const response = await fetch("/api/inventory", { headers: { accept: "application/json" } });
+    const response = await fetch(`/api/inventory?q=${encodeURIComponent(cleanQuery)}`, { headers: { accept: "application/json" } });
     if (!response.ok) throw new Error("Inventory API unavailable");
     const payload = await response.json();
     inventoryRecords = (payload.records || []).map(normalizeInventoryRecord);
     inventorySource = payload.source === "airtable" ? "airtable" : "preview";
   } catch (error) {
-    inventoryRecords = fallbackInventory.map(normalizeInventoryRecord);
+    inventoryRecords = [];
     inventorySource = "preview";
   }
-  renderInventory(activeInventoryQuery);
+  renderInventory(cleanQuery);
 }
 
 function fillBookingFromInventory(summary, tireSize = "") {
@@ -388,14 +420,6 @@ function bindInventoryEvents() {
     const query = activeInventoryQuery || inventorySearchInput?.value || heroInventoryInput?.value || "tire availability";
     fillBookingFromInventory(`Customer searched inventory for: ${query}`, query);
   });
-
-  if (inventoryFrame instanceof HTMLIFrameElement && loadInventoryFrame) {
-    loadInventoryFrame.addEventListener("click", () => {
-      if (!inventoryFrame.src) inventoryFrame.src = inventoryFrame.dataset.src || "";
-      inventoryFrame.hidden = false;
-      loadInventoryFrame.hidden = true;
-    });
-  }
 }
 
 if (navToggle && nav) {
@@ -424,7 +448,10 @@ if (bookingForm && formMessage) {
 }
 
 injectInventoryUi();
+removePublicInventoryAccess();
 injectFooterCredit();
+injectAppointmentCheckerLinks();
+injectJotformAgent();
 refreshInventoryElements();
 bindInventoryEvents();
 loadInventory();
