@@ -2,6 +2,7 @@ const AIRTABLE_EMBED_URL =
   "https://airtable.com/embed/appejU4ScV5Gi8rMt/shrH4e4r8hqGDZc4D?backgroundColor=blue&viewControls=on";
 const AIRTABLE_ORIGIN = "https://airtable.com";
 const INVENTORY_TABLE_ID = "tbl1Uo93RVAf8bNMt";
+const MIN_SEARCH_LENGTH = 2;
 
 function splitSetCookie(headerValue) {
   if (!headerValue) {
@@ -75,8 +76,8 @@ function normalizeInventory(payload) {
 function filterRecords(records, query) {
   const normalizedQuery = compactSearch(query);
 
-  if (!normalizedQuery) {
-    return records;
+  if (normalizedQuery.length < MIN_SEARCH_LENGTH) {
+    return [];
   }
 
   return records.filter((record) => {
@@ -85,15 +86,23 @@ function filterRecords(records, query) {
         record.sku,
         record.brand,
         record.tireSize,
-        record.location,
-        record.supplier,
         record.alert,
-        record.notes,
       ].join(" ")
     );
 
     return haystack.includes(normalizedQuery);
   });
+}
+
+function toPublicInventoryRecord(record) {
+  return {
+    id: record.id,
+    sku: record.sku,
+    brand: record.brand,
+    tireSize: record.tireSize,
+    quantity: record.quantity,
+    alert: record.alert,
+  };
 }
 
 async function getAirtableInventory() {
@@ -155,13 +164,24 @@ module.exports = async function inventoryHandler(req, res) {
 
   try {
     const query = typeof req.query?.q === "string" ? req.query.q.trim() : "";
+
+    if (compactSearch(query).length < MIN_SEARCH_LENGTH) {
+      res.status(200).json({
+        source: "airtable",
+        updatedAt: new Date().toISOString(),
+        count: 0,
+        records: [],
+        message: "Enter a tire size, brand, or SKU to check availability.",
+      });
+      return;
+    }
+
     const records = await getAirtableInventory();
-    const filteredRecords = filterRecords(records, query);
+    const filteredRecords = filterRecords(records, query).slice(0, 9).map(toPublicInventoryRecord);
 
     res.status(200).json({
       source: "airtable",
       updatedAt: new Date().toISOString(),
-      total: records.length,
       count: filteredRecords.length,
       records: filteredRecords,
     });
