@@ -34,6 +34,7 @@
 
       <nav class="main-nav" data-nav>
         <a href="#services">Services</a>
+        <a href="#inventory">Inventory</a>
         <a href="#booking">Booking</a>
         <a href="#about">About</a>
         <a href="#gallery">Gallery</a>
@@ -59,9 +60,32 @@
               New and used tires, fast service, affordable prices, and over 7 years of trusted
               experience.
             </p>
+            <form class="inventory-search hero-search" id="heroInventorySearch" role="search" aria-label="Search tire availability">
+              <label class="sr-only" for="heroInventoryInput">Search tire availability</label>
+              <div class="search-shell">
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                  <path d="m21 21-4.35-4.35" />
+                  <circle cx="11" cy="11" r="7" />
+                </svg>
+                <input
+                  id="heroInventoryInput"
+                  type="search"
+                  name="tireSearch"
+                  placeholder="Search tire size, brand, or SKU"
+                  autocomplete="off"
+                />
+                <button type="submit">Search Inventory</button>
+              </div>
+              <div class="search-examples" aria-label="Example searches">
+                <button type="button" data-search-chip="225/65R17">225/65R17</button>
+                <button type="button" data-search-chip="Michelin">Michelin</button>
+                <button type="button" data-search-chip="SKU-1001">SKU-1001</button>
+              </div>
+            </form>
             <div class="hero-actions">
               <a class="btn btn-primary" href="#booking">Book Appointment</a>
               <a class="btn btn-secondary" href="tel:+14035980258">Call Now</a>
+              <a class="btn btn-secondary" href="#inventory">View Inventory</a>
             </div>
             <div class="hero-phone">
               <span>Call A&amp;A TIRES LTD</span>
@@ -103,6 +127,54 @@
         </div>
       </section>
 
+      <section class="section inventory-section" id="inventory" aria-labelledby="inventory-title">
+        <div class="container">
+          <div class="inventory-head">
+            <div class="section-heading">
+              <h2 id="inventory-title">Search Tire Availability</h2>
+              <p>Search by tire size, brand, or SKU. Customers can check matches here without opening the full inventory table.</p>
+            </div>
+          </div>
+
+          <form class="inventory-search inventory-search-panel" id="inventorySearchForm" role="search" aria-label="Search live tire inventory">
+            <label class="sr-only" for="inventorySearchInput">Search live tire inventory</label>
+            <div class="search-shell">
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="m21 21-4.35-4.35" />
+                <circle cx="11" cy="11" r="7" />
+              </svg>
+              <input
+                id="inventorySearchInput"
+                type="search"
+                name="inventorySearch"
+                placeholder="Try 225/65R17, Bridgestone, or SKU-1012"
+                autocomplete="off"
+              />
+              <button type="submit">Check Stock</button>
+            </div>
+          </form>
+
+          <div class="inventory-results-top">
+            <p class="inventory-status" id="inventoryStatus" role="status" aria-live="polite">
+              Enter a tire size, brand, or SKU to check availability.
+            </p>
+            <div class="inventory-actions">
+              <a class="btn btn-primary" href="#booking" id="bookInventoryMatch">Book Matching Tire</a>
+              <a class="btn btn-outline" href="tel:+14035980258">Call to Confirm</a>
+              <a
+                class="btn btn-outline"
+                href="/check-appointment"
+                data-appointment-checker
+              >
+                Check Appointment
+              </a>
+            </div>
+          </div>
+
+          <div class="inventory-results" id="inventoryResults" aria-live="polite"></div>
+        </div>
+      </section>
+
       <section class="section booking-section" id="booking" aria-labelledby="booking-title">
         <div class="container booking-layout">
           <div class="section-intro">
@@ -114,6 +186,13 @@
             <div class="booking-note">
               <strong>Need urgent help?</strong>
               <a href="tel:+14035980258">Call (403) 598-0258</a>
+              <a
+                class="appointment-checker-link"
+                href="/check-appointment"
+                data-appointment-checker
+              >
+                Check Appointment
+              </a>
             </div>
           </div>
 
@@ -121,7 +200,7 @@
             <div class="form-row">
               <label>
                 Full name
-                <input type="text" name="fullName" autocomplete="name" required />
+                <input type="text" name="customer_name" autocomplete="name" required />
               </label>
               <label>
                 Phone number
@@ -131,21 +210,31 @@
             <div class="form-row">
               <label>
                 Email
-                <input type="email" name="email" autocomplete="email" required />
+                <input type="email" name="email" autocomplete="email" />
               </label>
               <label>
-                Vehicle make/model/year
-                <input type="text" name="vehicle" placeholder="Ford F-150 2020" required />
+                Tire size if known
+                <input type="text" name="tire_size" placeholder="225/65R17" />
+              </label>
+            </div>
+            <div class="form-row form-row-three">
+              <label>
+                Vehicle year
+                <input type="text" name="vehicle_year" inputmode="numeric" placeholder="2020" />
+              </label>
+              <label>
+                Vehicle make
+                <input type="text" name="vehicle_make" placeholder="Ford" />
+              </label>
+              <label>
+                Vehicle model
+                <input type="text" name="vehicle_model" placeholder="F-150" />
               </label>
             </div>
             <div class="form-row">
               <label>
-                Tire size if known
-                <input type="text" name="tireSize" placeholder="225/65R17" />
-              </label>
-              <label>
                 Service needed
-                <select name="service" required>
+                <select name="service_type" required>
                   <option value="">Select a service</option>
                   <option>New tires</option>
                   <option>Used tires</option>
@@ -156,20 +245,24 @@
                   <option>Other</option>
                 </select>
               </label>
-            </div>
-            <div class="form-row">
               <label>
                 Preferred date
-                <input type="date" name="preferredDate" required />
+                <input type="date" name="preferred_date" required />
               </label>
-              <label>
+            </div>
+            <div class="form-row">
+              <label class="form-wide">
                 Preferred time
-                <input type="time" name="preferredTime" required />
+                <input type="time" name="preferred_time" required />
               </label>
             </div>
             <label>
               Additional notes
               <textarea name="notes" rows="5" placeholder="Tell us about the tire issue, vehicle type, or preferred tire options."></textarea>
+            </label>
+            <label class="hp-field" aria-hidden="true" tabindex="-1">
+              Company
+              <input type="text" name="company_name" autocomplete="off" tabindex="-1" />
             </label>
             <button class="btn btn-primary form-submit" type="submit">Request Booking</button>
             <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
@@ -359,6 +452,10 @@
           <a href="mailto:aandatires18@gmail.com">aandatires18@gmail.com</a>
         </div>
         <p>&copy; <span id="year"></span> A&amp;A TIRES LTD. All rights reserved.</p>
+        <p class="footer-credit">
+          Designed and created by
+          <a href="https://noahtech.ca" target="_blank" rel="noopener noreferrer">Noah Tech</a>
+        </p>
       </div>
     </footer>
 
@@ -369,6 +466,7 @@
       Call
     </a>
 
+    <script src="https://cdn.jotfor.ms/agent/embedjs/019e48dc02a77f1aa743bcb5d570fd6ad746/embed.js?autoOpenChatIn=1"></script>
     <script src="script.js"></script>
   </body>
 </html>

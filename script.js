@@ -15,7 +15,7 @@ let bookInventoryMatch;
 
 const JOTFORM_AGENT_SRC =
   "https://cdn.jotfor.ms/agent/embedjs/019e48dc02a77f1aa743bcb5d570fd6ad746/embed.js?autoOpenChatIn=1";
-const APPOINTMENT_CHECKER_URL = "https://www.jotform.com/app/261404551332245";
+const APPOINTMENT_CHECKER_URL = "/check-appointment";
 const MIN_SEARCH_LENGTH = 2;
 
 let inventoryRecords = [];
@@ -115,13 +115,19 @@ function removePublicInventoryAccess() {
 }
 
 function injectAppointmentCheckerLinks() {
+  document.querySelectorAll("[data-appointment-checker]").forEach((link) => {
+    if (link instanceof HTMLAnchorElement) {
+      link.href = APPOINTMENT_CHECKER_URL;
+      link.removeAttribute("target");
+      link.removeAttribute("rel");
+    }
+  });
+
   const bookingNote = document.querySelector(".booking-note");
   if (bookingNote && !bookingNote.querySelector("[data-appointment-checker]")) {
     const checkerLink = document.createElement("a");
     checkerLink.className = "appointment-checker-link";
     checkerLink.href = APPOINTMENT_CHECKER_URL;
-    checkerLink.target = "_blank";
-    checkerLink.rel = "noopener noreferrer";
     checkerLink.dataset.appointmentChecker = "true";
     checkerLink.textContent = "Check Appointment";
     bookingNote.appendChild(checkerLink);
@@ -132,8 +138,6 @@ function injectAppointmentCheckerLinks() {
     const checkerButton = document.createElement("a");
     checkerButton.className = "btn btn-outline";
     checkerButton.href = APPOINTMENT_CHECKER_URL;
-    checkerButton.target = "_blank";
-    checkerButton.rel = "noopener noreferrer";
     checkerButton.dataset.appointmentChecker = "true";
     checkerButton.textContent = "Check Appointment";
     inventoryActions.appendChild(checkerButton);
@@ -207,7 +211,7 @@ function injectInventoryUi() {
           <div class="inventory-actions">
             <a class="btn btn-primary" href="#booking" id="bookInventoryMatch">Book Matching Tire</a>
             <a class="btn btn-outline" href="tel:+14035980258">Call to Confirm</a>
-            <a class="btn btn-outline" href="${APPOINTMENT_CHECKER_URL}" target="_blank" rel="noopener noreferrer" data-appointment-checker>Check Appointment</a>
+            <a class="btn btn-outline" href="${APPOINTMENT_CHECKER_URL}" data-appointment-checker>Check Appointment</a>
           </div>
         </div>
         <div class="inventory-results" id="inventoryResults" aria-live="polite"></div>
@@ -381,8 +385,8 @@ async function loadInventory(query = activeInventoryQuery) {
 function fillBookingFromInventory(summary, tireSize = "") {
   if (!bookingForm) return;
 
-  const tireSizeInput = bookingForm.querySelector('[name="tireSize"]');
-  const serviceSelect = bookingForm.querySelector('[name="service"]');
+  const tireSizeInput = bookingForm.querySelector('[name="tire_size"], [name="tireSize"]');
+  const serviceSelect = bookingForm.querySelector('[name="service_type"], [name="service"]');
   const notesInput = bookingForm.querySelector('[name="notes"]');
 
   if (tireSizeInput instanceof HTMLInputElement && tireSize) tireSizeInput.value = tireSize;
@@ -438,13 +442,67 @@ if (navToggle && nav) {
   });
 }
 
-if (bookingForm && formMessage) {
-  bookingForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    formMessage.textContent =
-      "Thank you! A&A TIRES LTD will contact you shortly to confirm your appointment.";
+function setBookingMessage(message, type = "success") {
+  if (!formMessage) return;
+
+  formMessage.textContent = message;
+  formMessage.classList.toggle("is-error", type === "error");
+  formMessage.classList.toggle("is-success", type !== "error");
+}
+
+async function submitBookingForm(event) {
+  event.preventDefault();
+
+  if (!bookingForm || bookingForm.dataset.submitting === "true") {
+    return;
+  }
+
+  const submitButton = bookingForm.querySelector(".form-submit");
+  const originalButtonText = submitButton?.textContent || "Request Booking";
+  bookingForm.dataset.submitting = "true";
+  bookingForm.setAttribute("aria-busy", "true");
+  setBookingMessage("");
+
+  if (submitButton instanceof HTMLButtonElement) {
+    submitButton.disabled = true;
+    submitButton.textContent = "Requesting...";
+  }
+
+  try {
+    const formData = new FormData(bookingForm);
+    const response = await fetch("/api/book-appointment", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(Object.fromEntries(formData.entries())),
+    });
+    const payload = await response.json().catch(() => ({}));
+
+    if (!response.ok || !payload.ok) {
+      throw new Error(payload.error || "We could not send your appointment request. Please call A&A Tires.");
+    }
+
+    setBookingMessage(
+      `Thank you. Your appointment request has been received. A&A Tires will contact you to confirm your appointment. Booking reference: ${payload.booking_reference}.`
+    );
     bookingForm.reset();
-  });
+  } catch (error) {
+    setBookingMessage(error.message || "We could not send your appointment request. Please call A&A Tires.", "error");
+  } finally {
+    delete bookingForm.dataset.submitting;
+    bookingForm.removeAttribute("aria-busy");
+
+    if (submitButton instanceof HTMLButtonElement) {
+      submitButton.disabled = false;
+      submitButton.textContent = originalButtonText;
+    }
+  }
+}
+
+if (bookingForm && formMessage) {
+  bookingForm.addEventListener("submit", submitBookingForm);
 }
 
 injectInventoryUi();

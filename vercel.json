@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/check-appointment",
+      "destination": "/check-appointment.html"
+    },
+    {
+      "source": "/admin/appointments",
+      "destination": "/admin-appointments.html"
+    }
+  ]
+}
