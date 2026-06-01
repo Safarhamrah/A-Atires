@@ -35,7 +35,7 @@
       <nav class="main-nav" data-nav>
         <a href="#services">Services</a>
         <a href="#inventory">Inventory</a>
-        <a href="#booking">Booking</a>
+        <a href="/book-appointment">Booking</a>
         <a href="#about">About</a>
         <a href="#gallery">Gallery</a>
         <a href="#contact">Contact</a>
@@ -83,7 +83,7 @@
               </div>
             </form>
             <div class="hero-actions">
-              <a class="btn btn-primary" href="#booking">Book Appointment</a>
+              <a class="btn btn-primary" href="/book-appointment">Book Appointment</a>
               <a class="btn btn-secondary" href="tel:+14035980258">Call Now</a>
               <a class="btn btn-secondary" href="#inventory">View Inventory</a>
             </div>
@@ -159,7 +159,7 @@
               Enter a tire size, brand, or SKU to check availability.
             </p>
             <div class="inventory-actions">
-              <a class="btn btn-primary" href="#booking" id="bookInventoryMatch">Book Matching Tire</a>
+              <a class="btn btn-primary" href="/book-appointment" id="bookInventoryMatch">Book Matching Tire</a>
               <a class="btn btn-outline" href="tel:+14035980258">Call to Confirm</a>
               <a
                 class="btn btn-outline"
@@ -180,8 +180,8 @@
           <div class="section-intro">
             <h2 id="booking-title">Book a Tire Service Appointment</h2>
             <p>
-              Tell us what you need and A&amp;A TIRES LTD will contact you shortly to confirm your
-              appointment.
+              Use our dedicated appointment form to request tire sales, installation, balancing,
+              repairs, or a seasonal tire change.
             </p>
             <div class="booking-note">
               <strong>Need urgent help?</strong>
@@ -196,77 +196,20 @@
             </div>
           </div>
 
-          <form class="booking-form" id="bookingForm">
-            <div class="form-row">
-              <label>
-                Full name
-                <input type="text" name="customer_name" autocomplete="name" required />
-              </label>
-              <label>
-                Phone number
-                <input type="tel" name="phone" autocomplete="tel" required />
-              </label>
+          <div class="booking-cta-card">
+            <div>
+              <span>Appointment request</span>
+              <h3>Reserve a service time online</h3>
+              <p>
+                Share your contact details, vehicle information, tire size, preferred date, and
+                service request in one quick form.
+              </p>
             </div>
-            <div class="form-row">
-              <label>
-                Email
-                <input type="email" name="email" autocomplete="email" />
-              </label>
-              <label>
-                Tire size if known
-                <input type="text" name="tire_size" placeholder="225/65R17" />
-              </label>
+            <div class="booking-cta-actions">
+              <a class="btn btn-primary" href="/book-appointment">Open Booking Form</a>
+              <a class="btn btn-outline" href="tel:+14035980258">Call Instead</a>
             </div>
-            <div class="form-row form-row-three">
-              <label>
-                Vehicle year
-                <input type="text" name="vehicle_year" inputmode="numeric" placeholder="2020" />
-              </label>
-              <label>
-                Vehicle make
-                <input type="text" name="vehicle_make" placeholder="Ford" />
-              </label>
-              <label>
-                Vehicle model
-                <input type="text" name="vehicle_model" placeholder="F-150" />
-              </label>
-            </div>
-            <div class="form-row">
-              <label>
-                Service needed
-                <select name="service_type" required>
-                  <option value="">Select a service</option>
-                  <option>New tires</option>
-                  <option>Used tires</option>
-                  <option>Tire installation</option>
-                  <option>Tire repair</option>
-                  <option>Tire balancing</option>
-                  <option>Seasonal tire change</option>
-                  <option>Other</option>
-                </select>
-              </label>
-              <label>
-                Preferred date
-                <input type="date" name="preferred_date" required />
-              </label>
-            </div>
-            <div class="form-row">
-              <label class="form-wide">
-                Preferred time
-                <input type="time" name="preferred_time" required />
-              </label>
-            </div>
-            <label>
-              Additional notes
-              <textarea name="notes" rows="5" placeholder="Tell us about the tire issue, vehicle type, or preferred tire options."></textarea>
-            </label>
-            <label class="hp-field" aria-hidden="true" tabindex="-1">
-              Company
-              <input type="text" name="company_name" autocomplete="off" tabindex="-1" />
-            </label>
-            <button class="btn btn-primary form-submit" type="submit">Request Booking</button>
-            <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
-          </form>
+          </div>
         </div>
       </section>
 

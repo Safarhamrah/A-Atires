@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/book-appointment",
+      "destination": "/book-appointment.html"
+    },
+    {
       "source": "/check-appointment",
       "destination": "/check-appointment.html"
     },

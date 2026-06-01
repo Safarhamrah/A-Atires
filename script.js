@@ -1,7 +1,5 @@
 const navToggle = document.querySelector("[data-nav-toggle]");
 const nav = document.querySelector("[data-nav]");
-const bookingForm = document.getElementById("bookingForm");
-const formMessage = document.getElementById("formMessage");
 const year = document.getElementById("year");
 
 let heroInventoryForm;
@@ -16,6 +14,7 @@ let bookInventoryMatch;
 const JOTFORM_AGENT_SRC =
   "https://cdn.jotfor.ms/agent/embedjs/019e48dc02a77f1aa743bcb5d570fd6ad746/embed.js?autoOpenChatIn=1";
 const APPOINTMENT_CHECKER_URL = "/check-appointment";
+const BOOKING_FORM_URL = "/book-appointment";
 const MIN_SEARCH_LENGTH = 2;
 
 let inventoryRecords = [];
@@ -209,7 +208,7 @@ function injectInventoryUi() {
         <div class="inventory-results-top">
           <p class="inventory-status" id="inventoryStatus" role="status" aria-live="polite">Enter a tire size, brand, or SKU to check availability.</p>
           <div class="inventory-actions">
-            <a class="btn btn-primary" href="#booking" id="bookInventoryMatch">Book Matching Tire</a>
+            <a class="btn btn-primary" href="${BOOKING_FORM_URL}" id="bookInventoryMatch">Book Matching Tire</a>
             <a class="btn btn-outline" href="tel:+14035980258">Call to Confirm</a>
             <a class="btn btn-outline" href="${APPOINTMENT_CHECKER_URL}" data-appointment-checker>Check Appointment</a>
           </div>
@@ -307,7 +306,7 @@ function renderInventory(query = "") {
         <p>Call A&amp;A TIRES LTD or request a booking and the shop can confirm nearby sizes, alternatives, or incoming stock.</p>
         <div class="inventory-card-actions">
           <a class="btn btn-primary" href="tel:+14035980258">Call Now</a>
-          <a class="btn btn-outline" href="#booking" data-inventory-book data-inventory-summary="Customer searched inventory for: ${escapeHtml(trimmedQuery)}">Request Help</a>
+          <a class="btn btn-outline" href="${BOOKING_FORM_URL}" data-inventory-book data-inventory-summary="Customer searched inventory for: ${escapeHtml(trimmedQuery)}">Request Help</a>
         </div>
       </div>
     `;
@@ -329,7 +328,7 @@ function renderInventory(query = "") {
           <div class="inventory-stock"><span>Current stock</span><strong>${escapeHtml(record.quantity)}</strong></div>
           <p class="inventory-detail">Call A&amp;A TIRES LTD to confirm fitment and installation timing.</p>
           <div class="inventory-card-actions">
-            <a class="btn btn-primary" href="#booking" data-inventory-book data-inventory-size="${escapeHtml(record.tireSize)}" data-inventory-summary="${escapeHtml(summary)}">Book</a>
+            <a class="btn btn-primary" href="${BOOKING_FORM_URL}" data-inventory-book data-inventory-size="${escapeHtml(record.tireSize)}" data-inventory-summary="${escapeHtml(summary)}">Book</a>
             <a class="btn btn-outline" href="tel:+14035980258">Call</a>
           </div>
         </article>
@@ -382,16 +381,19 @@ async function loadInventory(query = activeInventoryQuery) {
   renderInventory(cleanQuery);
 }
 
-function fillBookingFromInventory(summary, tireSize = "") {
-  if (!bookingForm) return;
-
-  const tireSizeInput = bookingForm.querySelector('[name="tire_size"], [name="tireSize"]');
-  const serviceSelect = bookingForm.querySelector('[name="service_type"], [name="service"]');
-  const notesInput = bookingForm.querySelector('[name="notes"]');
-
-  if (tireSizeInput instanceof HTMLInputElement && tireSize) tireSizeInput.value = tireSize;
-  if (serviceSelect instanceof HTMLSelectElement) serviceSelect.value = "New tires";
-  if (notesInput instanceof HTMLTextAreaElement) notesInput.value = `Inventory inquiry: ${summary}`;
+function rememberInventoryBooking(summary, tireSize = "") {
+  try {
+    sessionStorage.setItem(
+      "aaBookingContext",
+      JSON.stringify({
+        summary,
+        tireSize,
+        createdAt: new Date().toISOString(),
+      })
+    );
+  } catch (error) {
+    // Booking still works if storage is unavailable.
+  }
 }
 
 function bindInventoryEvents() {
@@ -417,12 +419,12 @@ function bindInventoryEvents() {
       bookingLink.getAttribute("data-inventory-summary") ||
       `Customer searched inventory for: ${activeInventoryQuery || "tire availability"}`;
     const tireSize = bookingLink.getAttribute("data-inventory-size") || activeInventoryQuery;
-    fillBookingFromInventory(summary, tireSize);
+    rememberInventoryBooking(summary, tireSize);
   });
 
   bookInventoryMatch?.addEventListener("click", () => {
     const query = activeInventoryQuery || inventorySearchInput?.value || heroInventoryInput?.value || "tire availability";
-    fillBookingFromInventory(`Customer searched inventory for: ${query}`, query);
+    rememberInventoryBooking(`Customer searched inventory for: ${query}`, query);
   });
 }
 
@@ -440,69 +442,6 @@ if (navToggle && nav) {
       navToggle.setAttribute("aria-label", "Open navigation");
     }
   });
-}
-
-function setBookingMessage(message, type = "success") {
-  if (!formMessage) return;
-
-  formMessage.textContent = message;
-  formMessage.classList.toggle("is-error", type === "error");
-  formMessage.classList.toggle("is-success", type !== "error");
-}
-
-async function submitBookingForm(event) {
-  event.preventDefault();
-
-  if (!bookingForm || bookingForm.dataset.submitting === "true") {
-    return;
-  }
-
-  const submitButton = bookingForm.querySelector(".form-submit");
-  const originalButtonText = submitButton?.textContent || "Request Booking";
-  bookingForm.dataset.submitting = "true";
-  bookingForm.setAttribute("aria-busy", "true");
-  setBookingMessage("");
-
-  if (submitButton instanceof HTMLButtonElement) {
-    submitButton.disabled = true;
-    submitButton.textContent = "Requesting...";
-  }
-
-  try {
-    const formData = new FormData(bookingForm);
-    const response = await fetch("/api/book-appointment", {
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(Object.fromEntries(formData.entries())),
-    });
-    const payload = await response.json().catch(() => ({}));
-
-    if (!response.ok || !payload.ok) {
-      throw new Error(payload.error || "We could not send your appointment request. Please call A&A Tires.");
-    }
-
-    setBookingMessage(
-      `Thank you. Your appointment request has been received. A&A Tires will contact you to confirm your appointment. Booking reference: ${payload.booking_reference}.`
-    );
-    bookingForm.reset();
-  } catch (error) {
-    setBookingMessage(error.message || "We could not send your appointment request. Please call A&A Tires.", "error");
-  } finally {
-    delete bookingForm.dataset.submitting;
-    bookingForm.removeAttribute("aria-busy");
-
-    if (submitButton instanceof HTMLButtonElement) {
-      submitButton.disabled = false;
-      submitButton.textContent = originalButtonText;
-    }
-  }
-}
-
-if (bookingForm && formMessage) {
-  bookingForm.addEventListener("submit", submitBookingForm);
 }
 
 injectInventoryUi();
